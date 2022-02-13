@@ -2,47 +2,17 @@ import type { NextPage } from "next";
 
 const Home: NextPage = () => {
     return (
-        <form className='flex flex-col space-y-2 p-5'>
-            <input
-                type='text'
-                required
-                placeholder='Username'
-                className='border p-1 peer border-gray-400 rounded-lg'
-            />
-            <span className='hidden peer-invalid:block text-red-500 '>
-                This input is invalid
-            </span>
-            <span className='hidden peer-valid:block text-teal-500 '>
-                Awesome username
-            </span>
-            <span className='hidden peer-hover:block text-orange-500 '>
-                Hello
-            </span>
-            <input type='submit' value='Login' className='bg-white' />
-        </form>
-    );
-};
-
-export default Home;
-{
-    /* <div className='bg-slate-400 py-20 px-5 grid gap-10 min-h-screen'>
-            <div className='bg-white p-6 rounded-3xl shadow-xl '>
+        <div className='bg-slate-400 py-20 px-5 grid gap-10 min-h-screen'>
+            <div className='bg-white sm:hover:bg-pink-800 sm:bg-red-400 md:bg-teal-400 lg:bg-indigo-400 xl:bg-yellow-400 2xl:bg-pink-500 p-6 rounded-3xl shadow-xl '>
                 <span className='font-semibold text-3xl'>Select Item</span>
-                <ul>
-                    {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className='flex justify-between my-2 '>
-                            <span className='text-gray-500'>Grey Chair</span>
-                            <span className='font-semibold'>$19</span>
-                        </div>
-                    ))}
-                </ul>
-                <ul>
-                    {["a", "b", "c", ""].map((c, i) => (
-                        <li className='bg-red-500 py-2 empty:hidden' key={i}>
-                            {c}
-                        </li>
-                    ))}
-                </ul>
+                <div className='flex justify-between my-2'>
+                    <span className='text-gray-500'>Grey Chair</span>
+                    <span className='font-semibold'>$19</span>
+                </div>
+                <div className='flex justify-between my-2'>
+                    <span className='text-gray-500'>Grey Chair</span>
+                    <span className='font-semibold'>$19</span>
+                </div>
                 <div className='flex justify-between mt-2 pt-2 border-t-2 border-dashed'>
                     <span>Total</span>
                     <span className='font-semibold'>$10</span>
@@ -54,7 +24,7 @@ export default Home;
                     Checkout
                 </button>
             </div>
-            <div className='bg-white overflow-hidden  rounded-3xl shadow-xl group'>
+            <div className='bg-white overflow-hidden  rounded-3xl shadow-xl '>
                 <div className='bg-blue-500  p-6 pb-14'>
                     <span className='text-white text-2xl'>Profile</span>
                 </div>
@@ -64,7 +34,7 @@ export default Home;
                             <span className='text-sm text-gray-500'>Order</span>
                             <span className='font-medium'>340</span>
                         </div>
-                        <div className='h-24 w-24 bg-red-300 rounded-full group-hover:bg-gray-300 transition-colors' />
+                        <div className='h-24 w-24 bg-red-400 rounded-full' />
                         <div className='flex flex-col items-center'>
                             <span className='text-sm text-gray-500'>Spent</span>
                             <span className='font-medium'>$340</span>
@@ -112,5 +82,8 @@ export default Home;
                     </button>
                 </div>
             </div>
-        </div> */
-}
+        </div>
+    );
+};
+
+export default Home;
