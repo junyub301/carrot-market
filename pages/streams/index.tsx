@@ -1,14 +1,14 @@
 import type { NextPage } from "next";
 
-const Live: NextPage = () => {
+const Stream: NextPage = () => {
     return (
-        <div className='py-10 divide-y-2 space-y-4'>
+        <div className='py-10 divide-y-[1px] space-y-4'>
             {[1, 2, 3, 4, 5].map((_, i) => (
                 <div className='pt-4 px-4' key={i}>
                     <div className='w-full rounded-md shadow-sm bg-slate-300 aspect-video' />
-                    <h3 className=' text-gray-700 text-lg mt-2'>
-                        Let&apos;s try potatos
-                    </h3>
+                    <h1 className='text-2xl mt-2 font-bold text-gray-900'>
+                        Galaxy S50
+                    </h1>
                 </div>
             ))}
             <button className='fixed hover:bg-orange-500 transition-colors cursor-pointer border-transparent bottom-24 right-5 shadow-xl bg-orange-400 rounded-full p-4 text-white'>
@@ -31,4 +31,4 @@ const Live: NextPage = () => {
     );
 };
 
-export default Live;
+export default Stream;
