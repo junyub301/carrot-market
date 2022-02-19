@@ -1,43 +1,27 @@
 import type { NextPage } from "next";
+import Button from "../../components/button";
+import Input from "../../components/intput";
+import Layout from "../../components/layout";
+import Textarea from "../../components/textarea";
 
 const Create: NextPage = () => {
     return (
-        <div className='py-10 px-4 space-y-5'>
-            <div>
-                <label
-                    className='mb-1 block text-sm font-medium text-gray-700'
-                    htmlFor='price'
-                >
-                    Price
-                </label>
-                <div className='rounded-md relative flex items-center shadow-sm'>
-                    <div className='absolute pointer-events-none left-0 pl-3 flex items-center justify-center'>
-                        <span className='text-gray-500 text-sm'>$</span>
-                    </div>
-                    <input
-                        id='price'
-                        className='appearance-none pl-7 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500'
-                        type='text'
-                        placeholder='0.00'
-                    />
-                    <div className='absolute pointer-events-none right-0 pr-3 flex items-center'>
-                        <span className=''>USD</span>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <label className='mb-1 block text-sm font-medium text-gray-700'>
-                    Description
-                </label>
-                <textarea
-                    className='mt-1 shadow-sm w-full  focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500'
-                    rows={4}
+        <Layout canGoBack>
+            <form className='py-10 px-4 space-y-5'>
+                <Input required label='Name' name='name' type='name' />
+                <Input
+                    requied
+                    label='Price'
+                    name='price'
+                    placeholder='0.00'
+                    type='text'
+                    kind='price'
                 />
-            </div>
-            <button className='mt-5 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none'>
-                Go live
-            </button>
-        </div>
+
+                <Textarea label='Description' name='description' />
+                <Button text='Go live' />
+            </form>
+        </Layout>
     );
 };
 
