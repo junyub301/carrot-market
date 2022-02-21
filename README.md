@@ -29,3 +29,4 @@
 3. pscale auth login 명령 실행 후 로그인
 4. pscale database create carrot-market --region ap-northeast 로 데이터베이스 설치
 5. pscale connect carrot-market로 데이터베이스 연결 -> 출력된 url을 가지고 .env DATABASE_URL 수정
+6. npx prisma db push
