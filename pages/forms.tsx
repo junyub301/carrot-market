@@ -11,9 +11,10 @@ export default function Forms() {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
-    } = useForm<LoginForm>();
+    } = useForm<LoginForm>({
+        mode: "onChange",
+    });
     const onValid = (data: LoginForm) => console.log(data);
     const onInvalid = (errors: FieldErrors) => console.log(errors);
 
@@ -33,8 +34,17 @@ export default function Forms() {
             <input
                 type='email'
                 placeholder='Email'
-                {...register("email", { required: "Email is required" })}
+                {...register("email", {
+                    required: "Email is required",
+                    validate: {
+                        notGmail: (value) =>
+                            !value.includes("@gmail.com") ||
+                            "Gmail is not allowed",
+                    },
+                })}
             />
+            {errors.email?.message}
+
             <input
                 type='password'
                 placeholder='Password'
