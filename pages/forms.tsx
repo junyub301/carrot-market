@@ -5,17 +5,22 @@ interface LoginForm {
     username: string;
     password: string;
     email: string;
+    errors?: string;
 }
 
 export default function Forms() {
     const {
         register,
         handleSubmit,
+        setError,
         formState: { errors },
     } = useForm<LoginForm>({
         mode: "onChange",
     });
-    const onValid = (data: LoginForm) => console.log(data);
+    const onValid = (data: LoginForm) => {
+        console.log(data);
+        setError("username", { message: "Username is taken" });
+    };
     const onInvalid = (errors: FieldErrors) => console.log(errors);
 
     return (
@@ -31,6 +36,7 @@ export default function Forms() {
                     },
                 })}
             />
+            {errors.username?.message}
             <input
                 type='email'
                 placeholder='Email'
