@@ -1,61 +1,31 @@
 import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export default function Forms() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [formErrors, setFormErros] = useState("");
-    const onUsernameChange = (
-        event: React.SyntheticEvent<HTMLInputElement>
-    ) => {
-        const {
-            currentTarget: { value },
-        } = event;
-        setUsername(value);
-    };
-    const onEmailChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-        const {
-            currentTarget: { value },
-        } = event;
-        setEmail(value);
-    };
-    const onPasswordChange = (
-        event: React.SyntheticEvent<HTMLInputElement>
-    ) => {
-        const {
-            currentTarget: { value },
-        } = event;
-        setPassword(value);
-    };
-    const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (username === "" || email === "" || password === "") {
-            setFormErros("All fields are required");
-        }
-    };
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm();
+    const onSubmit = (data: any) => console.log(data);
+
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <input
-                value={username}
-                onChange={onUsernameChange}
                 type='text'
                 placeholder='Username'
-                required
-                minLength={5}
+                {...register("username", { required: true })}
             />
             <input
-                value={email}
-                onChange={onEmailChange}
                 type='email'
                 placeholder='Email'
-                required
+                {...register("email", { required: true })}
             />
             <input
-                value={password}
-                onChange={onPasswordChange}
                 type='password'
                 placeholder='Password'
-                required
+                {...register("password", { required: true })}
             />
             <input type='submit' value='Create Account' />
         </form>
