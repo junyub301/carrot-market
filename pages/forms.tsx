@@ -8,14 +8,14 @@ export default function Forms() {
         watch,
         formState: { errors },
     } = useForm();
-    const onSubmit = (data: any) => console.log(data);
+    const onValid = (data: any) => console.log(data);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onValid)}>
             <input
                 type='text'
                 placeholder='Username'
-                {...register("username", { required: true })}
+                {...register("username", { required: true, minLength: 5 })}
             />
             <input
                 type='email'
