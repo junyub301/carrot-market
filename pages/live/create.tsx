@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Button from "../../components/button";
-import Input from "../../components/intput";
+import Input from "../../components/input";
 import Layout from "../../components/layout";
 import Textarea from "../../components/textarea";
 
@@ -10,7 +10,7 @@ const Create: NextPage = () => {
             <form className='py-10 px-4 space-y-5'>
                 <Input required label='Name' name='name' type='name' />
                 <Input
-                    requied
+                    required
                     label='Price'
                     name='price'
                     placeholder='0.00'

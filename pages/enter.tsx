@@ -1,12 +1,28 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Button from "../components/button";
-import Input from "../components/intput";
+import Input from "../components/input";
 import { cls } from "../libs/utils";
 
+interface EnterForm {
+    email?: string;
+    phone?: string;
+}
+
 export default function Enter() {
+    const { register, reset, handleSubmit } = useForm<EnterForm>();
     const [method, setMethod] = useState<"email" | "phone">("email");
-    const onEmailClick = () => setMethod("email");
-    const onPhoneClick = () => setMethod("phone");
+    const onEmailClick = () => {
+        reset();
+        setMethod("email");
+    };
+    const onPhoneClick = () => {
+        reset();
+        setMethod("phone");
+    };
+    const onValid = (data: EnterForm) => {
+        console.log(data);
+    };
     return (
         <div className='mt-16 px-4'>
             <h3 className='text-3xl font-bold text-center'>Enter to Carrot</h3>
@@ -40,10 +56,14 @@ export default function Enter() {
                         </button>
                     </div>
                 </div>
-                <form className='flex flex-col mt-8 space-y-4'>
+                <form
+                    onSubmit={handleSubmit(onValid)}
+                    className='flex flex-col mt-8 space-y-4'
+                >
                     <div className='mt-1'>
                         {method === "email" ? (
                             <Input
+                                register={register("email")}
                                 type='email'
                                 label='Email address'
                                 name='input'
@@ -52,6 +72,7 @@ export default function Enter() {
                         ) : null}
                         {method === "phone" ? (
                             <Input
+                                register={register("phone")}
                                 type='number'
                                 name='input'
                                 label='Phone number'
