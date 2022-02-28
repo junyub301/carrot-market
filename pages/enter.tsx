@@ -10,11 +10,23 @@ interface EnterForm {
     email?: string;
     phone?: string;
 }
+interface TokenForm {
+    token: string;
+}
+interface MutationResult {
+    ok: boolean;
+}
 
 const Enter: NextPage = () => {
-    const [enter, { loading, error, data }] = useMutations("/api/users/enter");
-    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [enter, { loading, error, data }] =
+        useMutations<MutationResult>("/api/users/enter");
+    const [
+        confirmToken,
+        { loading: tokenLoading, error: tokenError, data: tokenData },
+    ] = useMutations<MutationResult>("/api/users/confirm");
     const { register, reset, handleSubmit } = useForm<EnterForm>();
+    const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
+        useForm<TokenForm>();
     const [method, setMethod] = useState<"email" | "phone">("email");
     const onEmailClick = () => {
         reset();
@@ -25,78 +37,114 @@ const Enter: NextPage = () => {
         setMethod("phone");
     };
     const onValid = (validForm: EnterForm) => {
+        if (loading) return;
         enter(validForm);
     };
+
+    const onTokenValid = (validForm: TokenForm) => {
+        if (tokenLoading) return;
+        confirmToken(validForm);
+    };
+
     return (
         <div className='mt-16 px-4'>
             <h3 className='text-3xl font-bold text-center'>Enter to Carrot</h3>
             <div className='mt-8'>
-                <div className='flex flex-col items-center'>
-                    <h5 className='text-sm text-gray-500 font-medium'>
-                        Enter using:
-                    </h5>
-                    <div className='grid border-b w-full grid-cols-2 gap-16 mt-8'>
-                        <button
-                            className={cls(
-                                "pb-4 font-medium border-b-2",
-                                method === "email"
-                                    ? " border-orange-500"
-                                    : "border-transparent text-gray-500"
-                            )}
-                            onClick={onEmailClick}
-                        >
-                            Email
-                        </button>
-                        <button
-                            className={cls(
-                                "pb-4 font-medium border-b-2",
-                                method === "phone"
-                                    ? " border-orange-500"
-                                    : "border-transparent text-gray-500"
-                            )}
-                            onClick={onPhoneClick}
-                        >
-                            Phone
-                        </button>
-                    </div>
-                </div>
-                <form
-                    onSubmit={handleSubmit(onValid)}
-                    className='flex flex-col mt-8 space-y-4'
-                >
-                    <div className='mt-1'>
-                        {method === "email" ? (
+                {data?.ok ? (
+                    <form
+                        onSubmit={tokenHandleSubmit(onTokenValid)}
+                        className='flex flex-col mt-8 space-y-4'
+                    >
+                        <div className='mt-1'>
                             <Input
-                                register={register("email")}
-                                type='email'
-                                label='Email address'
-                                name='input'
-                                required
-                            />
-                        ) : null}
-                        {method === "phone" ? (
-                            <Input
-                                register={register("phone")}
+                                register={tokenRegister("token")}
                                 type='number'
-                                name='input'
-                                label='Phone number'
-                                kind='phone'
+                                label='Confirmation Token'
+                                name='token'
                                 required
                             />
-                        ) : null}
-                    </div>
+                        </div>
 
-                    {method === "email" ? (
-                        <Button text={"Get login link"} />
-                    ) : null}
-                    {method === "phone" ? (
                         <Button
-                            text={
-                                submitting ? "Loading" : "Get one-time password"
-                            }
+                            text={tokenLoading ? "Loading" : "Confirm Token"}
                         />
-                    ) : null}
-                </form>
+                    </form>
+                ) : (
+                    <>
+                        <div className='flex flex-col items-center'>
+                            <h5 className='text-sm text-gray-500 font-medium'>
+                                Enter using:
+                            </h5>
+                            <div className='grid border-b w-full grid-cols-2 gap-16 mt-8'>
+                                <button
+                                    className={cls(
+                                        "pb-4 font-medium border-b-2",
+                                        method === "email"
+                                            ? " border-orange-500"
+                                            : "border-transparent text-gray-500"
+                                    )}
+                                    onClick={onEmailClick}
+                                >
+                                    Email
+                                </button>
+                                <button
+                                    className={cls(
+                                        "pb-4 font-medium border-b-2",
+                                        method === "phone"
+                                            ? " border-orange-500"
+                                            : "border-transparent text-gray-500"
+                                    )}
+                                    onClick={onPhoneClick}
+                                >
+                                    Phone
+                                </button>
+                            </div>
+                        </div>
+                        <form
+                            onSubmit={handleSubmit(onValid)}
+                            className='flex flex-col mt-8 space-y-4'
+                        >
+                            <div className='mt-1'>
+                                {method === "email" ? (
+                                    <Input
+                                        register={register("email")}
+                                        type='email'
+                                        label='Email address'
+                                        name='input'
+                                        required
+                                    />
+                                ) : null}
+                                {method === "phone" ? (
+                                    <Input
+                                        register={register("phone")}
+                                        type='number'
+                                        name='input'
+                                        label='Phone number'
+                                        kind='phone'
+                                        required
+                                    />
+                                ) : null}
+                            </div>
+
+                            {method === "email" ? (
+                                <Button
+                                    text={
+                                        loading ? "Loading" : "Get login link"
+                                    }
+                                />
+                            ) : null}
+                            {method === "phone" ? (
+                                <Button
+                                    text={
+                                        loading
+                                            ? "Loading"
+                                            : "Get one-time password"
+                                    }
+                                />
+                            ) : null}
+                        </form>
+                    </>
+                )}
                 <div className='mt-8'>
                     <div className='relative'>
                         <div className='absolute w-full border-t border-gray-300' />
