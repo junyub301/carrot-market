@@ -1,3 +1,4 @@
+import { withIronSessionApiRoute } from "iron-session/next";
 import twilio from "twilio";
 import mail from "@sendgrid/mail";
 import client from "@libs/server/client";
@@ -13,11 +14,20 @@ async function handler(
     res: NextApiResponse<ResponseType>
 ) {
     const { token } = req.body;
-    console.log(token);
+    const exists = await client.token.findUnique({
+        where: {
+            payload: token,
+        },
+    });
+    if (!exists) res.status(404).end();
+    req.session.user = {
+        id: exists?.userId,
+    };
+    await req.session.save();
     res.status(200).end();
-    /* return res.json({
-        ok: true,
-    }); */
 }
 
-export default withHandler("POST", handler);
+export default withIronSessionApiRoute(withHandler("POST", handler), {
+    cookieName: "carrotsession",
+    password: "43452352346435632452123sadfsdf1234zsdfasf1235wasfds323",
+});
