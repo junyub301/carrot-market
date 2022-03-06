@@ -6,7 +6,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "studio": "npx prisma studio"
+        "studio": "npx prisma studio",
+        "connect": "pscale connect carrot-market"
     },
     "dependencies": {
         "@prisma/client": "^3.9.2",
