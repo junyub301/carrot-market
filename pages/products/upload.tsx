@@ -3,11 +3,28 @@ import Button from "@components/button";
 import Input from "@components/input";
 import Layout from "@components/layout";
 import Textarea from "@components/textarea";
+import { useForm } from "react-hook-form";
+import useMutations from "@libs/client/useMutations";
+
+interface UploadProductForm {
+    name: string;
+    price: number;
+    description: string;
+}
 
 const Upload: NextPage = () => {
+    const { register, handleSubmit } = useForm<UploadProductForm>();
+    const [uploadProduct, { loading, data }] = useMutations("/api/products");
+    const onValid = (data: UploadProductForm) => {
+        if (loading) return;
+        uploadProduct(data);
+    };
     return (
         <Layout canGoBack>
-            <div className='px-4 py-16 space-y-5'>
+            <form
+                className='px-4 py-16 space-y-5'
+                onSubmit={handleSubmit(onValid)}
+            >
                 <div>
                     <label className='w-full text-gray-600 cursor-pointer hover:text-orange-500 hover:border-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 py-6 h-48 rounded-md'>
                         <svg
@@ -29,23 +46,32 @@ const Upload: NextPage = () => {
                     </label>
                 </div>
                 <div>
-                    <Input label='Name' name='name' type='text' />
+                    <Input
+                        register={register("name", { required: true })}
+                        label='Name'
+                        name='name'
+                        type='text'
+                    />
                 </div>
                 <div>
                     <Input
+                        register={register("price", { required: true })}
                         kind='price'
                         name='price'
                         label='Price'
                         type='text'
                         placeholder='0.00'
-                        required
                     />
                 </div>
                 <div>
-                    <Textarea name='description' label='Description' />
+                    <Textarea
+                        register={register("description", { required: true })}
+                        name='description'
+                        label='Description'
+                    />
                 </div>
-                <Button text='Upload item' />
-            </div>
+                <Button text={loading ? "Loading... " : "Upload item"} />
+            </form>
         </Layout>
     );
 };
