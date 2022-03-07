@@ -21,11 +21,13 @@ interface ItemDetailResponse {
 
 const ItemDetail: NextPage = () => {
     const router = useRouter();
-    const { data } = useSWR<ItemDetailResponse>(
+    const { data, mutate } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
     const onFavClick = () => {
+        if (!data) return;
+        mutate({ ...data, isLiked: !data.isLiked }, false);
         toggleFav({});
     };
     return (
@@ -109,7 +111,7 @@ const ItemDetail: NextPage = () => {
                         Similar items
                     </h2>
                     <div className='mt-6 grid grid-cols-2 gap-4'>
-                        {data?.relatedProducts.map((product) => (
+                        {data?.relatedProducts?.map((product) => (
                             <Link
                                 key={product.id}
                                 href={`/products/${product.id}`}
