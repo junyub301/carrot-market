@@ -20,8 +20,21 @@ async function handler(
             },
         },
     });
+    const terms = product?.name
+        .split(" ")
+        .map((word) => ({ name: { contains: word } }));
+    const relatedProducts = await client.product.findMany({
+        where: {
+            OR: terms,
+            AND: {
+                id: {
+                    not: product?.id,
+                },
+            },
+        },
+    });
 
-    res.json({ ok: true, product });
+    res.json({ ok: true, product, relatedProducts });
 }
 
 export default withApiSession(withHandler({ methods: ["GET"], handler }));
