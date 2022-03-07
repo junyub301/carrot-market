@@ -2,11 +2,12 @@ import type { NextPage } from "next";
 import Button from "@components/button";
 import Layout from "@components/layout";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import Link from "next/link";
 import { Product, User } from ".prisma/client";
 import useMutations from "@libs/client/useMutations";
 import { cls } from "@libs/client/utils";
+import useUser from "@libs/client/useUser";
 
 interface ProductWidthUser extends Product {
     user: User;
@@ -20,14 +21,22 @@ interface ItemDetailResponse {
 }
 
 const ItemDetail: NextPage = () => {
+    const { user, isLoading } = useUser();
     const router = useRouter();
-    const { data, mutate } = useSWR<ItemDetailResponse>(
+    const { mutate } = useSWRConfig();
+    const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
     const onFavClick = () => {
         if (!data) return;
-        mutate({ ...data, isLiked: !data.isLiked }, false);
+        boundMutate(
+            (prev) => prev && { ...prev, isLiked: !prev.isLiked },
+            false
+        );
+        // 다른 페이지의 값을 변경 하고 싶을 경우에는 useSWRConfig()의 mutate를 사용한다.
+        // 단순히 refresh만 하고 싶을 경우에는 mutate("/api/users/me")이렇게만 사용한다.
+        // mutate("/api/users/me", (pre: any) => ({ ok: !pre.ok }), false);
         toggleFav({});
     };
     return (
