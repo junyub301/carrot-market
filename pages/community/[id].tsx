@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Answer, Post, User } from ".prisma/client";
 import Link from "next/link";
+import useMutations from "@libs/client/useMutations";
+import { cls } from "@libs/client/utils";
 
 interface AnswerWithUser extends Answer {
     user: User;
@@ -23,13 +25,36 @@ interface PostWithUser extends Post {
 interface CommunityPostResponse {
     ok: boolean;
     post: PostWithUser;
+    isWondering: boolean;
 }
 
 const CommunityPostDetail: NextPage = () => {
     const router = useRouter();
-    const { data, error } = useSWR<CommunityPostResponse>(
+    const { data, mutate } = useSWR<CommunityPostResponse>(
         router.query.id ? `/api/posts/${router.query.id}` : null
     );
+    const [wonder] = useMutations(`/api/posts/${router.query.id}/wonder`);
+    const onWonderClick = () => {
+        if (!data) return;
+        mutate(
+            (prev) =>
+                prev && {
+                    ...prev,
+                    post: {
+                        ...prev.post,
+                        _count: {
+                            ...prev.post._count,
+                            wonderings: prev.isWondering
+                                ? prev?.post._count.wonderings - 1
+                                : prev?.post._count.wonderings + 1,
+                        },
+                    },
+                    isWondering: !prev.isWondering,
+                },
+            false
+        );
+        wonder({});
+    };
 
     return (
         <Layout canGoBack>
@@ -57,7 +82,13 @@ const CommunityPostDetail: NextPage = () => {
                     </div>
                 </div>
                 <div className='flex px-4 space-x-5 mt-3 text-gray-700 py-2.5 border-t border-b-[2px] w-full'>
-                    <span className='flex space-x-2 items-center text-sm'>
+                    <button
+                        onClick={onWonderClick}
+                        className={cls(
+                            "flex space-x-2 items-center text-sm",
+                            data?.isWondering ? "text-teal-400" : ""
+                        )}
+                    >
                         <svg
                             className='w-4 h-4'
                             fill='none'
@@ -72,8 +103,8 @@ const CommunityPostDetail: NextPage = () => {
                                 d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
                             ></path>
                         </svg>
-                        <span>궁금해요 {data?.post?._count.wonderings}</span>
-                    </span>
+                        <span>궁금해요 {data?.post?._count?.wonderings}</span>
+                    </button>
                     <span className='flex space-x-2 items-center text-sm'>
                         <svg
                             className='w-4 h-4'
