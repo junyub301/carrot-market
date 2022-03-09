@@ -21,7 +21,6 @@ interface PostsResponse {
 
 const Community: NextPage = () => {
     const { latitude, longitude } = useCoords();
-    console.log(latitude, longitude);
 
     const { data } = useSWR<PostsResponse>(
         latitude && longitude
