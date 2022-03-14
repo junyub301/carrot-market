@@ -34,7 +34,7 @@ const Profile: NextPage = () => {
                     </div>
                 </div>
                 <div className='mt-10 flex justify-around'>
-                    <Link href={"/profile/bought"}>
+                    <Link href={"/profile/sold"}>
                         <a className='flex flex-col items-center'>
                             <div
                                 className='w-14 h-14 text-white bg-orange-500 rounded-full flex 
@@ -56,11 +56,11 @@ const Profile: NextPage = () => {
                                 </svg>
                             </div>
                             <span className='text-sm mt-2 font-medium text-gray-700'>
-                                판매내역
+                                구매내역
                             </span>
                         </a>
                     </Link>
-                    <Link href={"/profile/sold"}>
+                    <Link href={"/profile/bought"}>
                         <a className='flex flex-col items-center'>
                             <div
                                 className='w-14 h-14 text-white bg-orange-500 rounded-full flex 
@@ -81,7 +81,7 @@ const Profile: NextPage = () => {
                                     ></path>
                                 </svg>
                             </div>
-                            <span>구매내역</span>
+                            <span>판매내역</span>
                         </a>
                     </Link>
                     <Link href={"/profile/loved"}>
