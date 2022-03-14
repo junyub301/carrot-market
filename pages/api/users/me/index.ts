@@ -13,7 +13,8 @@ async function handler(
         });
         res.json({ ok: true, profile });
     }
-    if ((req.method = "POST")) {
+
+    if (req.method === "POST") {
         const {
             session: { user },
             body: { email, phone, name },
