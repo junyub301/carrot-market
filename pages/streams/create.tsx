@@ -43,13 +43,18 @@ const Create: NextPage = () => {
                 className='py-10 px-4 space-y-5'
             >
                 <Input
-                    register={register("name", { required: true })}
+                    register={register("name", {
+                        required: true,
+                    })}
                     label='Name'
                     name='name'
                     type='name'
                 />
                 <Input
-                    register={register("price", { required: true })}
+                    register={register("price", {
+                        required: true,
+                        valueAsNumber: true,
+                    })}
                     label='Price'
                     name='price'
                     type='text'
