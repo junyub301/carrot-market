@@ -6,8 +6,8 @@ import { Stream } from ".prisma/client";
 import { useForm } from "react-hook-form";
 import useMutations from "@libs/client/useMutations";
 import useUser from "@libs/client/useUser";
-import { cls } from "@libs/utils";
 import { useEffect } from "react";
+import Message from "@components/Message";
 
 interface StreamMessage {
     message: string;
@@ -73,33 +73,12 @@ const StreamDetail: NextPage = () => {
                     </h2>
                     <div className='py-10 pb-16 h-[50vh] overflow-y-scroll  px-4 space-y-4'>
                         {data?.stream.messages.map((message) => (
-                            <div
-                                className={cls(
-                                    "flex items-start space-x-2",
-                                    message.user.id === user?.id
-                                        ? "flex-row-reverse space-x-reverse"
-                                        : ""
-                                )}
+                            <Message
+                                reverse={message.user.id === user?.id}
+                                message={message.message}
                                 key={message.id}
-                            >
-                                <div className='w-8 h-8 rounded-full bg-slate-400' />
-                                <div className='w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md'>
-                                    <p>{message.message}</p>
-                                </div>
-                            </div>
+                            />
                         ))}
-                        {/*     <div className='flex items-start space-x-2'>
-                            <div className='w-8 h-8 rounded-full bg-slate-400' />
-                            <div className='w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md'>
-                                <p>Hi how much are you selling them for?</p>
-                            </div>
-                        </div>
-                        <div className='flex flex-row-reverse items-start space-x-2 space-x-reverse'>
-                            <div className='w-8 h-8 rounded-full bg-slate-400' />
-                            <div className='w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md'>
-                                <p>I want ￦20,000</p>
-                            </div>
-                        </div> */}
                     </div>
                     <div className='fixed py-2 bg-white  bottom-0 inset-x-0'>
                         <form
