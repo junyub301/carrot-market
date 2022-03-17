@@ -20,7 +20,7 @@ const Streams: NextPage = () => {
                         <a className='pt-4 px-4' key={stream.id}>
                             <div className='w-full rounded-md shadow-sm bg-slate-300 aspect-video' />
                             <h1 className='text-2xl mt-2 font-bold text-gray-900'>
-                                Galaxy S50
+                                {stream.name}
                             </h1>
                         </a>
                     </Link>
