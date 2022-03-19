@@ -4,7 +4,7 @@ import Input from "@components/input";
 import Layout from "@components/layout";
 import { useForm } from "react-hook-form";
 import useUser from "@libs/client/useUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useMutations from "@libs/client/useMutations";
 
 interface EidtProfileForm {
@@ -12,6 +12,7 @@ interface EidtProfileForm {
     email?: string;
     phone?: string;
     formErros?: string;
+    avatar?: FileList;
 }
 
 interface EditProfileResponse {
@@ -27,6 +28,7 @@ const EditProfile: NextPage = () => {
         handleSubmit,
         setError,
         formState: { errors },
+        watch,
     } = useForm<EidtProfileForm>();
 
     useEffect(() => {
@@ -38,15 +40,10 @@ const EditProfile: NextPage = () => {
     const [editProfile, { data, loading }] =
         useMutations<EditProfileResponse>(`/api/users/me`);
 
-    const onValid = ({ name, email, phone }: EidtProfileForm) => {
-        if (loading) return;
-        if (email === "" && phone === "" && name === "") {
-            return setError("formErros", {
-                message:
-                    "Email OR PHone number are required. You need to choose one.",
-            });
-        }
-        editProfile({ email, phone, name });
+    const onValid = ({ name, email, phone, avatar }: EidtProfileForm) => {
+        console.log(avatar);
+
+        return;
     };
 
     useEffect(() => {
@@ -55,6 +52,16 @@ const EditProfile: NextPage = () => {
         }
     }, [data, setError]);
 
+    const [avatarPreview, setAvatarPreview] = useState("");
+    const avatar = watch("avatar");
+
+    useEffect(() => {
+        if (avatar && avatar.length > 0) {
+            const file = avatar[0];
+            setAvatarPreview(URL.createObjectURL(file));
+        }
+    }, [avatar]);
+
     return (
         <Layout title='Edit Profile' canGoBack>
             <form
@@ -62,13 +69,21 @@ const EditProfile: NextPage = () => {
                 className='py-10 px-4 space-y-4'
             >
                 <div className='flex items-center space-x-3'>
-                    <div className='w-14 h-14 rounded-full bg-slate-500' />
+                    {avatarPreview ? (
+                        <img
+                            src={avatarPreview}
+                            className='w-14 h-14 rounded-full bg-slate-500'
+                        />
+                    ) : (
+                        <div className='w-14 h-14 rounded-full bg-slate-500' />
+                    )}
                     <label
                         htmlFor='picture'
                         className='cursor-pointer py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium focus:fint-2 focus:ring-offset-2 focus:ring-orange-500 text-gray-700'
                     >
                         Change
                         <input
+                            {...register("avatar")}
                             id='picture'
                             type='file'
                             className='hidden'
