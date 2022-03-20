@@ -35,6 +35,10 @@ const EditProfile: NextPage = () => {
         if (user?.email) setValue("email", user.email);
         if (user?.phone) setValue("phone", user.phone);
         if (user?.name) setValue("name", user.name);
+        if (user?.avatar)
+            setAvatarPreview(
+                `https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${user?.avatar}/public`
+            );
     }, [user, setValue]);
 
     const [editProfile, { data, loading }] =
@@ -49,15 +53,19 @@ const EditProfile: NextPage = () => {
             });
         }
         if (avatar && avatar.length > 0 && user) {
-            const { id, uploadURL } = await (await fetch(`/api/files`)).json();
+            const { uploadURL } = await (await fetch(`/api/files`)).json();
             const form = new FormData();
             form.append("file", avatar[0], user?.id + "");
-            await fetch(uploadURL, {
-                method: "POST",
-                body: form,
-            });
-            return;
-            // editProfile({ email, phone, name, avatarUrl:CF URL });
+            const {
+                result: { id },
+            } = await (
+                await fetch(uploadURL, {
+                    method: "POST",
+                    body: form,
+                })
+            ).json();
+
+            editProfile({ email, phone, name, avatarId: id });
         } else {
             editProfile({ email, phone, name });
         }
