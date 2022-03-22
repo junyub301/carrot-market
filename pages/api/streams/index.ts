@@ -22,11 +22,13 @@ async function handler(
                 result: {
                     uid: "f256e6ea9341d51eea64c9454659e576",
                     rtmps: {
-                        streamKey: "rtmps://live.cloudflare.com:443/live/",
-                        url: "MTQ0MTcjM3MjI1NDE3ODIyNTI1MjYyMjE4NTI2ODI1NDcxMzUyMzcf256e6ea9351d51eea64c9454659e576",
+                        url: "rtmps://live.cloudflare.com:443/live/",
+                        streamKey:
+                            "MTQ0MTcjM3MjI1NDE3ODIyNTI1MjYyMjE4NTI2ODI1NDcxMzUyMzcf256e6ea9351d51eea64c9454659e576",
                     },
                 },
             } ||
+            // api 결제를 하지 않았기 떄문에 샘플 데이터 등록
             (await (
                 await fetch(
                     `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/stream/live_inputs`,
