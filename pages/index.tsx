@@ -6,6 +6,7 @@ import useUser from "@libs/client/useUser";
 import Head from "next/head";
 import useSWR from "swr";
 import { Product } from ".prisma/client";
+import client from "@libs/server/client";
 
 export interface ProductWidthCount extends Product {
     _count: {
@@ -17,23 +18,23 @@ interface ProductResponse {
     products: ProductWidthCount[];
 }
 
-const Home: NextPage = () => {
+const Home: NextPage<{ products: ProductWidthCount[] }> = ({ products }) => {
     const { user, isLoading } = useUser();
-    const { data } = useSWR<ProductResponse>("api/products");
-    console.log(data);
+    console.log(products);
+    // const { data } = useSWR<ProductResponse>("api/products");
     return (
         <Layout title='홈' hasTabBar>
             <Head>
                 <title>Home</title>
             </Head>
             <div className='flex flex-col space-y-5 py-10'>
-                {data?.products?.map((product) => (
+                {products?.map((product) => (
                     <Item
                         id={product.id}
                         key={product.id}
                         title={product.name}
                         price={product.price}
-                        hearts={product._count.favs}
+                        hearts={product._count?.favs}
                     />
                 ))}
                 <FloatingButton href={"/products/upload"}>
@@ -57,5 +58,16 @@ const Home: NextPage = () => {
         </Layout>
     );
 };
+
+export async function getServerSideProps() {
+    const products = await client.product.findMany({});
+    console.log(products);
+
+    return {
+        props: {
+            products: JSON.parse(JSON.stringify(products)),
+        },
+    };
+}
 
 export default Home;

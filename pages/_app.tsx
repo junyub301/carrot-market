@@ -21,19 +21,23 @@ function MyApp({ Component, pageProps }: AppProps) {
                 afterInteractive : 페이지를 먼저 다 불러온 후 스크립트를 불러온다.
                 lazyOnload : 스크립트를 불러오지만 최우선은 아니다.
             */}
-            <Script
+            {/* <Script
                 src='https://developers.kakao.com/sdk/js/kakao.js'
                 strategy='lazyOnload'
             />
-            <Script src='https://connect.facebook.net/en_US/sdk.js' onLoad={() => {
-                 window.fbAsyncInit = function() {
-                    FB.init({
-                      appId            : 'your-app-id',
-                      autoLogAppEvents : true,
-                      xfbml            : true,
-                      version          : 'v13.0'
-                    });
-                  };/>
+            <Script
+                src='https://connect.facebook.net/en_US/sdk.js'
+                onLoad={() => {
+                    window.fbAsyncInit = function () {
+                        FB.init({
+                            appId: "your-app-id",
+                            autoLogAppEvents: true,
+                            xfbml: true,
+                            version: "v13.0",
+                        });
+                    };
+                }}
+            /> */}
         </SWRConfig>
     );
 }
