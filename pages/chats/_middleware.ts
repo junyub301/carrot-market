@@ -1,5 +1,5 @@
 import type { NextRequest, NextFetchEvent } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-    console.log("charts Only middleware");
+    console.log("chats Only middleware");
 }
