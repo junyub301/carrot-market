@@ -45,6 +45,14 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
         // mutate("/api/users/me", (pre: any) => ({ ok: !pre.ok }), false);
         toggleFav({});
     };
+    if (router.isFallback) {
+        return (
+            <Layout title='loading...'>
+                <span>loading..</span>
+            </Layout>
+        );
+    }
+
     return (
         <Layout canGoBack seoTitle='Product Detail'>
             <div className='px-4 py-10'>
@@ -167,7 +175,7 @@ export const getStaticPaths: GetStaticPaths = () => {
     */
     return {
         paths: [],
-        fallback: "blocking",
+        fallback: true,
     };
 };
 
