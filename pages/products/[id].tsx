@@ -159,6 +159,12 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
+    /*
+     fallback : "blocking" , true, false
+     blocking: 정적 html이 없는 화면에 사용자가 들어왔을때 만들어 준다. 단, 만드는 동안에 빈화면을 출력한다.
+     true:  blocking과 같은 기능이지만, 만드는 동안에 다른 화면을 출력할 수 있다.
+     false: build할때 만들어진 html이 없을 경우 404에러를 띄운다.
+    */
     return {
         paths: [],
         fallback: "blocking",
