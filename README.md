@@ -30,3 +30,17 @@
 4. pscale database create carrot-market --region ap-northeast 로 데이터베이스 설치
 5. pscale connect carrot-market로 데이터베이스 연결 -> 출력된 url을 가지고 .env DATABASE_URL 수정
 6. npx prisma db push
+
+## Error
+
+Next.js ODR(On-demand Revalidation)를 사용하기 위해 Next 버전을 12.1.0으로 올렸더니
+"Cannot set property 'reactRoot' of undefined" 에러 발생
+
+-   해결방법
+    next.config.js의 moudle.expors 안에 다음 코드 추가
+
+```
+experimental: {
+reactRoot: true,
+},
+```
