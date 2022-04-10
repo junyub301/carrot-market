@@ -37,10 +37,5 @@ Next.js ODR(On-demand Revalidation)를 사용하기 위해 Next 버전을 12.1.0
 "Cannot set property 'reactRoot' of undefined" 에러 발생
 
 -   해결방법
-    next.config.js의 moudle.expors 안에 다음 코드 추가
-
-```
-experimental: {
-reactRoot: true,
-},
-```
+    아래와 같이 버전 변경
+    {"next": "12.1.0","react": "^17.0.2","react-dom": "^17.0.2",}
