@@ -16,14 +16,21 @@ async function handler(
             id: +id.toString(),
         },
         include: {
-            messages: {
-                select: {
-                    id: true,
-                    message: true,
-                    user: {
+            chatroom: {
+                where: {
+                    streamId: +id,
+                },
+                include: {
+                    messages: {
                         select: {
-                            avatar: true,
                             id: true,
+                            message: true,
+                            user: {
+                                select: {
+                                    avatar: true,
+                                    id: true,
+                                },
+                            },
                         },
                     },
                 },

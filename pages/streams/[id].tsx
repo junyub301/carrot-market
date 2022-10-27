@@ -19,7 +19,11 @@ interface StreamMessage {
 }
 
 interface StreamWithMessage extends Stream {
-    messages: StreamMessage[];
+    chatroom: [
+        {
+            messages: StreamMessage[];
+        }
+    ];
 }
 interface StreamResponse {
     ok: boolean;
@@ -46,6 +50,7 @@ const StreamDetail: NextPage = () => {
     const onValid = (form: MessageForm) => {
         if (loading) return;
         reset();
+        console.log(data, form);
         mutate(
             (prev) =>
                 prev &&
@@ -53,12 +58,16 @@ const StreamDetail: NextPage = () => {
                     prev,
                     stream: {
                         ...prev.stream,
-                        messages: [
-                            ...prev.stream.messages,
+                        chatroom: [
                             {
-                                id: Date.now(),
-                                message: form.message,
-                                user: { ...user },
+                                messages: [
+                                    ...prev.stream.chatroom[0].messages,
+                                    {
+                                        id: Date.now(),
+                                        message: form.message,
+                                        user: { ...user },
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -111,7 +120,7 @@ const StreamDetail: NextPage = () => {
                         Live Chat
                     </h2>
                     <div className='py-10 pb-16 h-[50vh] overflow-y-scroll  px-4 space-y-4'>
-                        {data?.stream.messages.map((message) => (
+                        {data?.stream.chatroom[0].messages?.map((message) => (
                             <Message
                                 reverse={message.user.id === user?.id}
                                 message={message.message}

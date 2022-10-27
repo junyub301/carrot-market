@@ -22,11 +22,7 @@ interface ItemDetailResponse {
     isLiked: boolean;
 }
 
-const ItemDetail: NextPage<ItemDetailResponse> = ({
-    product,
-    relatedProducts,
-    isLiked,
-}) => {
+const ItemDetail: NextPage = () => {
     const { user, isLoading } = useUser();
     const router = useRouter();
     const { mutate } = useSWRConfig();
@@ -59,7 +55,7 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
                 <div className='mb-8'>
                     <div className='relative pb-80'>
                         <Image
-                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${product?.image}/public`}
+                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${data?.product?.image}/public`}
                             className=' bg-slate-300 object-corver'
                             layout='fill'
                         />
@@ -68,14 +64,16 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
                         <Image
                             width={48}
                             height={48}
-                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${product?.user?.avatar}/avatar`}
+                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${data?.product?.user?.avatar}/avatar`}
                             className='w-12 h-12 rounded-full bg-gray-300'
                         />
                         <div>
                             <p className='text-sm font-medium text-gray-700'>
-                                {product?.user?.name}
+                                {data?.product?.user?.name}
                             </p>
-                            <Link href={`/users/profiles/${product?.user?.id}`}>
+                            <Link
+                                href={`/users/profiles/${data?.product?.user?.id}`}
+                            >
                                 <a className='text-xs font-medium text-gray-500'>
                                     View profile &rarr;
                                 </a>
@@ -84,13 +82,13 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
                     </div>
                     <div className='mt-5'>
                         <h1 className='text-3xl font-bold text-gray-900'>
-                            {product?.name}
+                            {data?.product?.name}
                         </h1>
                         <span className='text-2xl mt-3 text-gray-900 block'>
-                            ${product?.price}
+                            ${data?.product?.price}
                         </span>
                         <p className=' my-6 text-gray-700'>
-                            {product?.description}
+                            {data?.product?.description}
                         </p>
                         <div className='flex items-center justify-between space-x-2'>
                             <Button text='Talk to seller' large />
@@ -99,12 +97,12 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
                                 onClick={onFavClick}
                                 className={cls(
                                     "p-3 rounded-md flex items-center hover:bg-gray-100  justify-center ",
-                                    isLiked
+                                    data?.isLiked
                                         ? "text-red-400  hover:text-red-600"
                                         : "text-gray-400 hover:text-gray-500"
                                 )}
                             >
-                                {isLiked ? (
+                                {data?.isLiked ? (
                                     <svg
                                         className='w-6 h-6'
                                         fill='currentColor'
@@ -143,7 +141,7 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
                         Similar items
                     </h2>
                     <div className='mt-6 grid grid-cols-2 gap-4'>
-                        {relatedProducts?.map((product) => (
+                        {data?.relatedProducts?.map((product) => (
                             <Link
                                 key={product.id}
                                 href={`/products/${product.id}`}
@@ -164,60 +162,6 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
             </div>
         </Layout>
     );
-};
-
-export const getStaticPaths: GetStaticPaths = () => {
-    /*
-     fallback : "blocking" , true, false
-     blocking: 정적 html이 없는 화면에 사용자가 들어왔을때 만들어 준다. 단, 만드는 동안에 빈화면을 출력한다.
-     true:  blocking과 같은 기능이지만, 만드는 동안에 다른 화면을 출력할 수 있다.
-     false: build할때 만들어진 html이 없을 경우 404에러를 띄운다.
-    */
-    return {
-        paths: [],
-        fallback: true,
-    };
-};
-
-export const getStaticProps: GetStaticProps = async (ctx) => {
-    if (!ctx?.params?.id) {
-        return {
-            props: {},
-        };
-    }
-    const product = await client.product.findUnique({
-        where: { id: +ctx.params.id.toString() },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    avatar: true,
-                },
-            },
-        },
-    });
-    const terms = product?.name
-        .split(" ")
-        .map((word) => ({ name: { contains: word } }));
-    const relatedProducts = await client.product.findMany({
-        where: {
-            OR: terms,
-            AND: {
-                id: {
-                    not: product?.id,
-                },
-            },
-        },
-    });
-    const isLiked = false;
-    return {
-        props: {
-            product: JSON.parse(JSON.stringify(product)),
-            relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
-            isLiked,
-        },
-    };
 };
 
 export default ItemDetail;

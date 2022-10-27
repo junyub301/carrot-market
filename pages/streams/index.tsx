@@ -13,8 +13,6 @@ interface StreamsResponse {
 
 const Streams: NextPage = () => {
     const { data } = useSWR<StreamsResponse>(`/api/streams?page=3`);
-    console.log(data);
-
     return (
         <Layout title='라이브' hasTabBar>
             <div className='py-10 divide-y-[1px] space-y-4'>

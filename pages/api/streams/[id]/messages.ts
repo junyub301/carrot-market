@@ -13,12 +13,32 @@ async function handler(
         query: { id },
     } = req;
 
+    const stream = await client.stream.findFirst({
+        where: {
+            id: +id,
+        },
+        select: {
+            id: true,
+            userId: true,
+        },
+    });
+
+    const alreadyExists = await client.chatroom.findFirst({
+        where: {
+            sellerId: stream?.userId,
+            streamId: +id,
+        },
+        select: {
+            id: true,
+        },
+    });
+
     const message = await client.message.create({
         data: {
             message: body.message,
-            stream: {
+            chatroom: {
                 connect: {
-                    id: +id.toString(),
+                    id: alreadyExists?.id,
                 },
             },
             user: {

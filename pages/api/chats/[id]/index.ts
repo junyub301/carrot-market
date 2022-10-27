@@ -1,3 +1,4 @@
+// const chats = await client.
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -9,37 +10,36 @@ async function handler(
 ) {
     const {
         query: { id },
+        body,
         session: { user },
         method,
     } = req;
 
-    const alreadyExists = await client.fav.findFirst({
+    const alreadyExists = await client.message.findFirst({
         where: {
-            productId: +id.toString(),
-            userId: user?.id,
+            userId: +id.toString(),
         },
     });
     if (alreadyExists) {
-        await client.fav.delete({
+        const chat = await client.message.findFirst({
             where: {
-                id: alreadyExists.id,
+                userId: +id.toString(),
+            },
+            select: {
+                id: true,
             },
         });
     } else {
-        await client.fav.create({
+        /*   const message = await client.message.create({
             data: {
+                message: body.message,
                 user: {
                     connect: {
                         id: user?.id,
                     },
                 },
-                product: {
-                    connect: {
-                        id: +id.toString(),
-                    },
-                },
             },
-        });
+        }); */
     }
     res.json({ ok: true });
 }

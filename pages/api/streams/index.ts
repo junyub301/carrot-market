@@ -17,19 +17,18 @@ async function handler(
                 uid,
                 rtmps: { streamKey, url },
             },
-        } =
-            {
-                result: {
-                    uid: "f256e6ea9341d51eea64c9454659e576",
-                    rtmps: {
-                        url: "rtmps://live.cloudflare.com:443/live/",
-                        streamKey:
-                            "MTQ0MTcjM3MjI1NDE3ODIyNTI1MjYyMjE4NTI2ODI1NDcxMzUyMzcf256e6ea9351d51eea64c9454659e576",
-                    },
+        } = {
+            result: {
+                uid: "f256e6ea9341d51eea64c9454659e576",
+                rtmps: {
+                    url: "rtmps://live.cloudflare.com:443/live/",
+                    streamKey:
+                        "MTQ0MTcjM3MjI1NDE3ODIyNTI1MjYyMjE4NTI2ODI1NDcxMzUyMzcf256e6ea9351d51eea64c9454659e576",
                 },
-            } ||
-            // api 결제를 하지 않았기 떄문에 샘플 데이터 등록
-            (await (
+            },
+        };
+        // api 결제를 하지 않았기 떄문에 샘플 데이터 등록
+        /*  (await (
                 await fetch(
                     `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/stream/live_inputs`,
                     {
@@ -40,7 +39,8 @@ async function handler(
                         body: `{"meta": {"name":"${name}"},"recording": { "mode": "automatic", "timeoutSeconds": 10}}`,
                     }
                 )
-            ).json());
+            ).json()); */
+
         const stream = await client.stream.create({
             data: {
                 cloudflareId: uid,
@@ -58,6 +58,22 @@ async function handler(
                 },
             },
         });
+
+        await client.chatroom.create({
+            data: {
+                seller: {
+                    connect: {
+                        id: user?.id,
+                    },
+                },
+                stream: {
+                    connect: {
+                        id: stream.id,
+                    },
+                },
+            },
+        });
+
         res.json({ ok: true, stream });
     }
     if (req.method === "GET") {
