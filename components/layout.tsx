@@ -30,7 +30,7 @@ export default function Layout({
             </Head>
             <div
                 className={
-                    "bg-white w-full h-12 max-w-xl justify-center text-lg px-10 font-medium fixed text-gray-800 border-b top-0 flex items-center"
+                    "bg-white w-full h-12 max-w-xl justify-center text-lg px-10 font-medium fixed text-gray-800 border-b top-0 flex items-center z-10"
                 }
             >
                 {canGoBack && (

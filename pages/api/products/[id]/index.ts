@@ -21,6 +21,13 @@ async function handler(
                     avatar: true,
                 },
             },
+            chatrooms: {
+                select: {
+                    id: true,
+                    sellerId: true,
+                    buyerId: true,
+                },
+            },
         },
     });
     const terms = product?.name

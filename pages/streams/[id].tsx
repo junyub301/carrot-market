@@ -50,7 +50,6 @@ const StreamDetail: NextPage = () => {
     const onValid = (form: MessageForm) => {
         if (loading) return;
         reset();
-        console.log(data, form);
         mutate(
             (prev) =>
                 prev &&
@@ -61,7 +60,7 @@ const StreamDetail: NextPage = () => {
                         chatroom: [
                             {
                                 messages: [
-                                    ...prev.stream.chatroom[0].messages,
+                                    ...prev.stream.chatroom[0]?.messages,
                                     {
                                         id: Date.now(),
                                         message: form.message,
@@ -89,7 +88,7 @@ const StreamDetail: NextPage = () => {
                         allowFullScreen={true}
                     ></iframe>
                 ) : null}
-                <div className='mt-5'>
+                {/*   <div className='mt-5'>
                     <h1 className='text-3xl font-bold text-gray-900'>
                         {data?.stream?.name}
                     </h1>
@@ -114,13 +113,13 @@ const StreamDetail: NextPage = () => {
                             :{data?.stream.cloudflareKey}
                         </span>
                     </div>
-                </div>
+                </div> */}
                 <div>
                     <h2 className='text-2xl font-bold text-gray-900'>
                         Live Chat
                     </h2>
                     <div className='py-10 pb-16 h-[50vh] overflow-y-scroll  px-4 space-y-4'>
-                        {data?.stream.chatroom[0].messages?.map((message) => (
+                        {data?.stream.chatroom[0]?.messages?.map((message) => (
                             <Message
                                 reverse={message.user.id === user?.id}
                                 message={message.message}

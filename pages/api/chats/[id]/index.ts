@@ -15,33 +15,39 @@ async function handler(
         method,
     } = req;
 
-    const alreadyExists = await client.message.findFirst({
-        where: {
-            userId: +id.toString(),
-        },
-    });
-    if (alreadyExists) {
-        const chat = await client.message.findFirst({
+    if (method === "GET") {
+        const messages = await client.message.findMany({
             where: {
-                userId: +id.toString(),
+                chatroomId: +id,
             },
-            select: {
-                id: true,
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        avatar: true,
+                    },
+                },
             },
         });
+        res.json({ ok: true, messages });
     } else {
-        /*   const message = await client.message.create({
+        const message = await client.message.create({
             data: {
                 message: body.message,
+                chatroom: {
+                    connect: {
+                        id: +id,
+                    },
+                },
                 user: {
                     connect: {
                         id: user?.id,
                     },
                 },
             },
-        }); */
+        });
+        res.json({ ok: true, message });
     }
-    res.json({ ok: true });
 }
 
 export default withApiSession(
