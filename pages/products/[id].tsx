@@ -77,6 +77,7 @@ const ItemDetail: NextPage = () => {
                             src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${data?.product?.image}/public`}
                             className=' bg-slate-300 object-corver'
                             layout='fill'
+                            objectFit='cover'
                             alt='productImage'
                         />
                     </div>

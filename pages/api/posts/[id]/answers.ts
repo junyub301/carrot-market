@@ -24,23 +24,35 @@ async function handler(
 
     if (!post) return res.status(404).json({ ok: false });
 
-    const newAnswer = await client.answer.create({
-        data: {
-            user: {
-                connect: {
-                    id: user?.id,
+    if (req.method === "POST") {
+        const newAnswer = await client.answer.create({
+            data: {
+                user: {
+                    connect: {
+                        id: user?.id,
+                    },
                 },
-            },
-            post: {
-                connect: {
-                    id: +id.toString(),
+                post: {
+                    connect: {
+                        id: +id.toString(),
+                    },
                 },
+                answer,
             },
-            answer,
-        },
-    });
+        });
 
-    res.json({ ok: true, answer: newAnswer });
+        res.json({ ok: true, answer: newAnswer });
+    } else if (req.method === "DELETE") {
+        const newAnswer = await client.answer.delete({
+            where: {
+                id: req.body.answerId,
+            },
+        });
+
+        res.json({ ok: true, answer: newAnswer });
+    }
 }
 
-export default withApiSession(withHandler({ methods: ["POST"], handler }));
+export default withApiSession(
+    withHandler({ methods: ["POST", "DELETE"], handler })
+);

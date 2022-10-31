@@ -1,3 +1,4 @@
+import { moneyFormat } from "@libs/client/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,7 +28,7 @@ export default function Item({ title, price, hearts, id, image }: ItemProps) {
                             {title}
                         </h3>
                         <span className='font-medium mt-1 text-gray-900'>
-                            ${price}
+                            ${moneyFormat(price)}
                         </span>
                     </div>
                 </div>

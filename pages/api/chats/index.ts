@@ -76,7 +76,6 @@ async function handler(
                     },
                 },
             });
-            console.log(">>>", chatRoom);
             res.json({ ok: true, chatRoom });
         }
     }

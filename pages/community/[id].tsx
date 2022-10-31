@@ -7,9 +7,11 @@ import useSWR from "swr";
 import { Answer, Post, User } from ".prisma/client";
 import Link from "next/link";
 import useMutations from "@libs/client/useMutations";
-import { cls } from "@libs/client/utils";
+import { cls, dateFormat } from "@libs/client/utils";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import useUser from "@libs/client/useUser";
+import useDelete from "@libs/client/useDelete";
 
 interface AnswerWithUser extends Answer {
     user: User;
@@ -40,6 +42,7 @@ interface AnswerResponse {
 }
 
 const CommunityPostDetail: NextPage = () => {
+    const { user } = useUser();
     const router = useRouter();
     const { register, handleSubmit, reset } = useForm<AnswerForm>();
     const { data, mutate } = useSWR<CommunityPostResponse>(
@@ -50,6 +53,10 @@ const CommunityPostDetail: NextPage = () => {
     );
     const [snedAnswer, { loading: answerLoading, data: answerData }] =
         useMutations<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
+
+    const [deleteAnswer, { data: deleteAnswerData }] =
+        useDelete<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
+
     const onWonderClick = () => {
         if (!data) return;
         mutate(
@@ -78,12 +85,24 @@ const CommunityPostDetail: NextPage = () => {
         snedAnswer(form);
     };
 
+    const onAnswerDelete = (answerId: number) => {
+        alert("정말 삭제하시겠습니까?");
+        deleteAnswer({ answerId });
+    };
+
     useEffect(() => {
         if (answerData && answerData.ok) {
             reset();
             mutate();
         }
     }, [answerData, reset, mutate]);
+
+    useEffect(() => {
+        if (deleteAnswerData && deleteAnswerData.ok) {
+            reset();
+            mutate();
+        }
+    }, [deleteAnswerData, reset, mutate]);
 
     return (
         <Layout canGoBack>
@@ -160,16 +179,24 @@ const CommunityPostDetail: NextPage = () => {
                         >
                             <div className='w-8 h-8 bg-slate-200 rounded-full' />
                             <div>
-                                <span className='text-sm block font-medium text-gray-700'>
+                                <span className='text-sm block font-medium text-gray-700 '>
                                     {answer.user.name}
                                 </span>
                                 <span className='text-xs block  text-gray-500'>
-                                    {answer.createdAt}
+                                    {dateFormat(answer.createdAt)}
                                 </span>
                                 <p className='atext-gray-700 mt-2'>
                                     {answer.answer}
                                 </p>
                             </div>
+                            {answer.user.id === user?.id && (
+                                <div
+                                    onClick={() => onAnswerDelete(answer.id)}
+                                    className='flex flex-1 flex-row justify-end items-end cursor-pointer'
+                                >
+                                    x
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -177,7 +204,7 @@ const CommunityPostDetail: NextPage = () => {
                     <Textarea
                         register={register("answer", {
                             required: true,
-                            minLength: 5,
+                            minLength: 1,
                         })}
                         placeholder='Answer this question'
                     />
