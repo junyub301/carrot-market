@@ -1,4 +1,4 @@
-import { moneyFormat } from "@libs/client/utils";
+import { cls, moneyFormat } from "@libs/client/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,9 +8,17 @@ interface ItemProps {
     price: number;
     hearts: number;
     image: string;
+    soldOut?: boolean;
 }
 
-export default function Item({ title, price, hearts, id, image }: ItemProps) {
+export default function Item({
+    title,
+    price,
+    hearts,
+    id,
+    image,
+    soldOut,
+}: ItemProps) {
     return (
         <Link href={`/products/${id}`}>
             <a className='flex px-4 pt-5 cursor-pointer justify-between'>
@@ -27,8 +35,13 @@ export default function Item({ title, price, hearts, id, image }: ItemProps) {
                         <h3 className='text-sm font-medium text-gray-900'>
                             {title}
                         </h3>
-                        <span className='font-medium mt-1 text-gray-900'>
-                            ${moneyFormat(price)}
+                        <span
+                            className={cls(
+                                "font-medium mt-1 ",
+                                soldOut ? "text-gray-500" : "text-gray-900"
+                            )}
+                        >
+                            {soldOut ? "판매완료" : `$${moneyFormat(price)}`}
                         </span>
                     </div>
                 </div>

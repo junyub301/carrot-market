@@ -35,6 +35,7 @@ const Home: NextPage = () => {
                               title={product.name}
                               price={product.price}
                               image={product.image}
+                              soldOut={product.soldOut}
                               hearts={product._count?.favs || 0}
                           />
                       ))

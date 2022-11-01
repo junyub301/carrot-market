@@ -3,7 +3,7 @@ import Button from "@components/button";
 import Layout from "@components/layout";
 import useMutations from "@libs/client/useMutations";
 import useUser from "@libs/client/useUser";
-import { cls } from "@libs/client/utils";
+import { cls, imageSrc } from "@libs/client/utils";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,10 +31,15 @@ const ItemDetail: NextPage = () => {
     const { user, isLoading } = useUser();
     const router = useRouter();
     const { mutate } = useSWRConfig();
-    const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
+    const {
+        data,
+        mutate: boundMutate,
+        isValidating,
+    } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
+    const [soldout] = useMutations(`/api/products/${router?.query?.id}`);
     const [createChatroom, { loading: chatRoomLoading, data: chatRoom }] =
         useMutations<createChatRoomMutation>("/api/chats");
     const onFavClick = () => {
@@ -47,6 +52,22 @@ const ItemDetail: NextPage = () => {
         // 단순히 refresh만 하고 싶을 경우에는 mutate("/api/users/me")이렇게만 사용한다.
         // mutate("/api/users/me", (pre: any) => ({ ok: !pre.ok }), false);
         toggleFav({});
+    };
+
+    const onSoldOut = () => {
+        alert("판매완료 하시겠습니까?");
+        boundMutate(
+            (prev) =>
+                prev && {
+                    ...prev,
+                    product: {
+                        ...prev.product,
+                        soldOut: true,
+                    },
+                },
+            false
+        );
+        soldout({});
     };
 
     const onTalkClick = () => {
@@ -68,24 +89,31 @@ const ItemDetail: NextPage = () => {
         );
     }
 
-    return (
+    return isValidating ? (
+        <Layout title='loading...'>
+            <span>loading..</span>
+        </Layout>
+    ) : (
         <Layout canGoBack seoTitle='Product Detail'>
             <div className='px-4 py-10'>
                 <div className='mb-8'>
                     <div className='relative pb-80'>
                         <Image
-                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${data?.product?.image}/public`}
+                            src={imageSrc(data?.product?.image, "public")}
                             className=' bg-slate-300 object-corver'
                             layout='fill'
                             objectFit='cover'
                             alt='productImage'
                         />
                     </div>
-                    <div className='flex cursor-pointer py-3 border-t border-b  items-center space-x-3'>
+                    <div className='flex  py-3 border-t border-b  items-center space-x-3'>
                         <Image
                             width={48}
                             height={48}
-                            src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${data?.product?.user?.avatar}/avatar`}
+                            src={imageSrc(
+                                data?.product?.user?.avatar,
+                                "avatar"
+                            )}
                             className='w-12 h-12 rounded-full bg-gray-300'
                             alt='avataImage'
                         />
@@ -101,13 +129,31 @@ const ItemDetail: NextPage = () => {
                                 </a>
                             </Link>
                         </div>
+                        {data?.product?.user?.id === user?.id &&
+                            !data?.product?.soldOut && (
+                                <div className='flex flex-1 justify-end'>
+                                    <button onClick={onSoldOut}>
+                                        판매완료
+                                    </button>
+                                </div>
+                            )}
                     </div>
                     <div className='mt-5'>
                         <h1 className='text-3xl font-bold text-gray-900'>
                             {data?.product?.name}
                         </h1>
-                        <span className='text-2xl mt-3 text-gray-900 block'>
-                            ${data?.product?.price}
+                        <span
+                            className={cls(
+                                "text-2xl mt-3 block ",
+                                data?.product?.soldOut
+                                    ? "text-gray-500"
+                                    : "text-gray-900"
+                            )}
+                        >
+                            $
+                            {data?.product?.soldOut
+                                ? "판매완료"
+                                : data?.product?.price}
                         </span>
                         <p className=' my-6 text-gray-700'>
                             {data?.product?.description}
