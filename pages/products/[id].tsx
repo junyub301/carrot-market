@@ -1,6 +1,8 @@
 import { Product, User, Chatroom } from ".prisma/client";
+import AlertModal from "@components/alterModal";
 import Button from "@components/button";
 import Layout from "@components/layout";
+import useModal from "@libs/client/useModal";
 import useMutations from "@libs/client/useMutations";
 import useUser from "@libs/client/useUser";
 import { cls, imageSrc } from "@libs/client/utils";
@@ -31,11 +33,7 @@ const ItemDetail: NextPage = () => {
     const { user, isLoading } = useUser();
     const router = useRouter();
     const { mutate } = useSWRConfig();
-    const {
-        data,
-        mutate: boundMutate,
-        isValidating,
-    } = useSWR<ItemDetailResponse>(
+    const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
@@ -53,21 +51,29 @@ const ItemDetail: NextPage = () => {
         // mutate("/api/users/me", (pre: any) => ({ ok: !pre.ok }), false);
         toggleFav({});
     };
+    const { openModal } = useModal();
 
     const onSoldOut = () => {
-        alert("판매완료 하시겠습니까?");
-        boundMutate(
-            (prev) =>
-                prev && {
-                    ...prev,
-                    product: {
-                        ...prev.product,
-                        soldOut: true,
-                    },
+        openModal({
+            modalType: "AlertModal",
+            props: {
+                message: "정말 삭제하시겠습니까?",
+                onSubmit: () => {
+                    boundMutate(
+                        (prev) =>
+                            prev && {
+                                ...prev,
+                                product: {
+                                    ...prev.product,
+                                    soldOut: true,
+                                },
+                            },
+                        false
+                    );
+                    soldout({});
                 },
-            false
-        );
-        soldout({});
+            },
+        });
     };
 
     const onTalkClick = () => {
@@ -88,8 +94,7 @@ const ItemDetail: NextPage = () => {
             </Layout>
         );
     }
-
-    return isValidating ? (
+    return !data ? (
         <Layout title='loading...'>
             <span>loading..</span>
         </Layout>

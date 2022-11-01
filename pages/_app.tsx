@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
+import ModalsProvider from "@libs/context/modalProvider";
 
 function MyApp({ Component, pageProps }: AppProps) {
     console.log("App IS RUNNING");
@@ -12,9 +13,11 @@ function MyApp({ Component, pageProps }: AppProps) {
                     fetch(url).then((response) => response.json()),
             }}
         >
-            <div className='w-full max-w-xl mx-auto'>
-                <Component {...pageProps} />
-            </div>
+            <ModalsProvider>
+                <div className='w-full max-w-xl mx-auto'>
+                    <Component {...pageProps} />
+                </div>
+            </ModalsProvider>
         </SWRConfig>
     );
 }
