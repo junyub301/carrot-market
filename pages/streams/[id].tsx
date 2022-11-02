@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import useMutations from "@libs/client/useMutations";
 import useUser from "@libs/client/useUser";
 import { useEffect } from "react";
-import Message from "@components/Message";
+import Message from "@components/message";
 
 interface StreamMessage {
     message: string;

@@ -26,7 +26,7 @@ export default function Item({
                     <div className='w-20 h-20  rounded-md relative'>
                         <Image
                             src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${image}/public`}
-                            className=' w-20 h-20 rounded-md object-cover'
+                            className=' w-20 h-20 rounded-md object-contain'
                             layout='fill'
                             alt=''
                         />

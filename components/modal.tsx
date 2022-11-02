@@ -2,8 +2,9 @@ import {
     ModalsDispatchContext,
     ModalsStateContext,
 } from "@libs/context/modalContext";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import AlertModal from "./alterModal";
+import ConfirmModal from "./confirmModal";
 
 export const MODAL_TYPES = {
     ConfirmModal: "ConfirmModal",
@@ -12,7 +13,7 @@ export const MODAL_TYPES = {
 };
 
 const MODAL_COMPONENTS: any = {
-    // [MODAL_TYPES.ConfirmModal]: ConfirmModal,
+    [MODAL_TYPES.ConfirmModal]: ConfirmModal,
     [MODAL_TYPES.AlertModal]: AlertModal,
     // [MODAL_TYPES.CustomModal]: CustomModal,
 };
@@ -20,6 +21,7 @@ const MODAL_COMPONENTS: any = {
 const Modals = () => {
     const openModals = useContext(ModalsStateContext);
     const { close } = useContext(ModalsDispatchContext);
+
     return (
         <>
             {openModals.map((modal, index) => {

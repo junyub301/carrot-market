@@ -55,9 +55,10 @@ const ItemDetail: NextPage = () => {
 
     const onSoldOut = () => {
         openModal({
-            modalType: "AlertModal",
+            modalType: "ConfirmModal",
             props: {
                 message: "정말 삭제하시겠습니까?",
+                subMessage: "판매 완료시 상태 변경을 할 수 없습니다.",
                 onSubmit: () => {
                     boundMutate(
                         (prev) =>
@@ -102,12 +103,11 @@ const ItemDetail: NextPage = () => {
         <Layout canGoBack seoTitle='Product Detail'>
             <div className='px-4 py-10'>
                 <div className='mb-8'>
-                    <div className='relative pb-80'>
+                    <div className='relative pb-80 mb-5'>
                         <Image
                             src={imageSrc(data?.product?.image, "public")}
-                            className=' bg-slate-300 object-corver'
+                            className=' bg-slate-300 object-cover'
                             layout='fill'
-                            objectFit='cover'
                             alt='productImage'
                         />
                     </div>

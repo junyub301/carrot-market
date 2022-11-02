@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Product } from ".prisma/client";
 import Image from "next/image";
+import useModal from "@libs/client/useModal";
 
 interface UploadProductForm {
     name: string;
@@ -24,6 +25,7 @@ interface UplaodProductMutation {
 
 const Upload: NextPage = () => {
     const { register, handleSubmit, watch } = useForm<UploadProductForm>();
+    const { openModal } = useModal();
     const [uploadProduct, { loading, data }] =
         useMutations<UplaodProductMutation>("/api/products");
     const onValid = async ({ name, price, description }: UploadProductForm) => {
@@ -40,6 +42,17 @@ const Upload: NextPage = () => {
             uploadProduct({ name, price, description, photoId: id });
         } else {
             uploadProduct({ name, price, description });
+        }
+        if (!loading) {
+            openModal({
+                modalType: "AlertModal",
+                props: {
+                    onSubmit: () => {
+                        router.push("/");
+                    },
+                    message: "등록되었습니다.",
+                },
+            });
         }
     };
     const router = useRouter();
@@ -62,12 +75,13 @@ const Upload: NextPage = () => {
                 className='px-4 py-16 space-y-5'
                 onSubmit={handleSubmit(onValid)}
             >
-                <div>
+                <div className='relative w-full h-48 '>
                     {photoPreview ? (
                         <Image
                             src={photoPreview}
-                            className='w-full text-gray-600 h-46 rounded-md'
+                            className=' text-gray-600  rounded-md object-contain'
                             alt='privewImg'
+                            layout='fill'
                         />
                     ) : (
                         <label className='w-full text-gray-600 cursor-pointer hover:text-orange-500 hover:border-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 py-6 h-48 rounded-md'>
