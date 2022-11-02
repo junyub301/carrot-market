@@ -27,8 +27,13 @@ async function handler(
                 chatrooms: {
                     select: {
                         id: true,
-                        sellerId: true,
-                        buyerId: true,
+                        buyer: {
+                            select: {
+                                id: true,
+                                avatar: true,
+                                name: true,
+                            },
+                        },
                     },
                 },
             },
@@ -67,6 +72,7 @@ async function handler(
                 soldOut: true,
             },
         });
+
         res.json({ ok: true, product });
     }
 }

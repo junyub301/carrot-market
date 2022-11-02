@@ -38,6 +38,21 @@ async function handler(
             },
         });
 
+        await client.sale.create({
+            data: {
+                user: {
+                    connect: {
+                        id: user?.id,
+                    },
+                },
+                product: {
+                    connect: {
+                        id: product.id,
+                    },
+                },
+            },
+        });
+
         res.json({ ok: true, product });
     }
 }

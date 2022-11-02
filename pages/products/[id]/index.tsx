@@ -36,6 +36,7 @@ const ItemDetail: NextPage = () => {
     const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
+    console.log(data);
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
     const [soldout] = useMutations(`/api/products/${router?.query?.id}`);
     const [createChatroom, { loading: chatRoomLoading, data: chatRoom }] =
@@ -137,9 +138,11 @@ const ItemDetail: NextPage = () => {
                         {data?.product?.user?.id === user?.id &&
                             !data?.product?.soldOut && (
                                 <div className='flex flex-1 justify-end'>
-                                    <button onClick={onSoldOut}>
+                                    <Link
+                                        href={`/products/${router.query.id}/buyer`}
+                                    >
                                         판매완료
-                                    </button>
+                                    </Link>
                                 </div>
                             )}
                     </div>
