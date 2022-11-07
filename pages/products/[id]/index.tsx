@@ -1,8 +1,6 @@
-import { Product, User, Chatroom } from ".prisma/client";
-import AlertModal from "@components/alterModal";
+import { Chatroom, Product, User } from ".prisma/client";
 import Button from "@components/button";
 import Layout from "@components/layout";
-import useModal from "@libs/client/useModal";
 import useMutations from "@libs/client/useMutations";
 import useUser from "@libs/client/useUser";
 import { cls, imageSrc } from "@libs/client/utils";
@@ -36,7 +34,6 @@ const ItemDetail: NextPage = () => {
     const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
-    console.log(data);
     const [toggleFav] = useMutations(`/api/products/${router.query.id}/fav`);
     const [soldout] = useMutations(`/api/products/${router?.query?.id}`);
     const [createChatroom, { loading: chatRoomLoading, data: chatRoom }] =
@@ -51,31 +48,6 @@ const ItemDetail: NextPage = () => {
         // 단순히 refresh만 하고 싶을 경우에는 mutate("/api/users/me")이렇게만 사용한다.
         // mutate("/api/users/me", (pre: any) => ({ ok: !pre.ok }), false);
         toggleFav({});
-    };
-    const { openModal } = useModal();
-
-    const onSoldOut = () => {
-        openModal({
-            modalType: "ConfirmModal",
-            props: {
-                message: "정말 삭제하시겠습니까?",
-                subMessage: "판매 완료시 상태 변경을 할 수 없습니다.",
-                onSubmit: () => {
-                    boundMutate(
-                        (prev) =>
-                            prev && {
-                                ...prev,
-                                product: {
-                                    ...prev.product,
-                                    soldOut: true,
-                                },
-                            },
-                        false
-                    );
-                    soldout({});
-                },
-            },
-        });
     };
 
     const onTalkClick = () => {

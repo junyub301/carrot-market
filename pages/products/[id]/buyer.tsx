@@ -1,5 +1,6 @@
 import Button from "@components/button";
 import Layout from "@components/layout";
+import useMutations from "@libs/client/useMutations";
 import { cls, imageSrc } from "@libs/client/utils";
 import { Chatroom, Product, User } from "@prisma/client";
 import Image from "next/image";
@@ -25,6 +26,7 @@ const Buyer = () => {
     const { data, mutate: boundMutate } = useSWR<ProductResponse>(
         router.query.id ? `/api/products/${router.query.id}` : null
     );
+    const [sellingProducts] = useMutations(`/api/products/${router.query.id}`);
 
     const [selectUser, setSelectuser] = useState<number>(0);
 
@@ -32,7 +34,10 @@ const Buyer = () => {
         setSelectuser(buyer.id);
     };
 
-    const onSubmit = () => {};
+    const onSubmit = () => {
+        sellingProducts({ buyerId: selectUser });
+        router.push("/");
+    };
 
     return (
         <Layout canGoBack title='구매자 선택'>
@@ -86,6 +91,7 @@ const Buyer = () => {
                             onClick={onSubmit}
                             className='fixed bottom-0'
                             text='확정하기'
+                            disabled={!data.product?.chatrooms[0]?.buyer}
                         />
                     </div>
                 </div>

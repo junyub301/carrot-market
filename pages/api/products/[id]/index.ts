@@ -73,6 +73,35 @@ async function handler(
             },
         });
 
+        await client.sale.create({
+            data: {
+                product: {
+                    connect: {
+                        id: +id.toString(),
+                    },
+                },
+                user: {
+                    connect: {
+                        id: user?.id,
+                    },
+                },
+            },
+        });
+        await client.purchase.create({
+            data: {
+                product: {
+                    connect: {
+                        id: +id.toString(),
+                    },
+                },
+                user: {
+                    connect: {
+                        id: req.body?.buyerId,
+                    },
+                },
+            },
+        });
+
         res.json({ ok: true, product });
     }
 }
