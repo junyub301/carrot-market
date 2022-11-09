@@ -1,4 +1,3 @@
-// const chats = await client.
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";

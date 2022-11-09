@@ -37,7 +37,7 @@ const ChatDetail: NextPage = () => {
     );
     const { register, handleSubmit, reset } = useForm<MessageForm>();
     const [sendMessage, { loading, data: sendMessageData }] = useMutations(
-        `/api/chats/${router.query.id}`
+        `/api/chats/${router?.query?.id}`
     );
 
     const onValid = (form: MessageForm) => {
