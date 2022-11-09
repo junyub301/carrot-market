@@ -1,8 +1,10 @@
 // eslint-disable-next-line @next/next/no-server-import-in-page
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import type { NextRequest, NextFetchEvent } from "next/server";
+// eslint-disable-next-line @next/next/no-server-import-in-page
+import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-    if (req.ua?.isBot) {
+    if (req.ua?.isBot as any) {
         return new Response("Plz don't be a bot. Be human.", { status: 403 });
     }
     if (!req.url.includes("/api")) {
