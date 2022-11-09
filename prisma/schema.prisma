@@ -44,6 +44,8 @@ model Token {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Product {
@@ -62,6 +64,8 @@ model Product {
   purchases   Purchase[]
   records     Record[]
   chatrooms   Chatroom[]
+
+  @@index([userId])
 }
 
 model Post {
@@ -75,6 +79,8 @@ model Post {
   longitude  Float?
   answers    Answer[]
   wonderings Wondering[]
+
+  @@index([userId])
 }
 
 model Answer {
@@ -86,6 +92,8 @@ model Answer {
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   answer    String   @db.MediumText
+
+  @@index([userId, postId])
 }
 
 model Wondering {
@@ -96,6 +104,8 @@ model Wondering {
   postId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId, postId])
 }
 
 model Review {
@@ -108,6 +118,8 @@ model Review {
   createdFor   User     @relation(name: "receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
   createdForId Int
   score        Int      @default(1)
+
+  @@index([createdById, createdForId])
 }
 
 model Fav {
@@ -118,6 +130,8 @@ model Fav {
   productId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId, productId])
 }
 
 model Sale {
@@ -128,6 +142,8 @@ model Sale {
   productId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId, productId])
 }
 
 model Purchase {
@@ -149,6 +165,8 @@ model Record {
   createdAt DateTime @default(now())
   kind      Kind
   updatedAt DateTime @updatedAt
+
+  @@index([userId, productId])
 }
 
 enum Kind {
@@ -170,6 +188,8 @@ model Stream {
   cloudflareUrl String
   cloudflareKey String
   chatroom      Chatroom[]
+
+  @@index([userId])
 }
 
 model Chatroom {
@@ -186,6 +206,8 @@ model Chatroom {
   productId Int?
   stream    Stream?   @relation(fields: [streamId], references: [id], onDelete: Cascade)
   streamId  Int?
+
+  @@index([buyerId, sellerId, productId, streamId])
 }
 
 model Message {
@@ -197,4 +219,6 @@ model Message {
   message    String   @db.MediumText
   chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
   chatroomId Int
+
+  @@index([userId, chatroomId])
 }
