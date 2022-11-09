@@ -4,7 +4,7 @@ import type { NextRequest, NextFetchEvent } from "next/server";
 import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
-    if (req.ua?.isBot as any) {
+    if (req.ua?.isBot as typeof req.ua) {
         return new Response("Plz don't be a bot. Be human.", { status: 403 });
     }
     if (!req.url.includes("/api")) {
