@@ -15,7 +15,7 @@ async function handler(
 
     const stream = await client.stream.findFirst({
         where: {
-            id: +id,
+            id: +id!.toString(),
         },
         select: {
             id: true,
@@ -26,7 +26,7 @@ async function handler(
     const alreadyExists = await client.chatroom.findFirst({
         where: {
             sellerId: stream?.userId,
-            streamId: +id,
+            streamId: +id!.toString(),
         },
         select: {
             id: true,
