@@ -1,4 +1,6 @@
+// eslint-disable-next-line @next/next/no-server-import-in-page
 import type { NextRequest, NextFetchEvent } from "next/server";
+// eslint-disable-next-line @next/next/no-server-import-in-page
 import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
@@ -6,7 +8,10 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
         return new Response("Plz don't be a bot. Be human.", { status: 403 });
     } */
     if (!req.url.includes("/api")) {
-        if (!req.url.includes("/enter") && !req.cookies?.carrotsession) {
+        if (
+            !req.url.includes("/enter") &&
+            !req.cookies.get("carrotsession")?.value
+        ) {
             return NextResponse.redirect(new URL("/enter", req.url));
         }
     }
