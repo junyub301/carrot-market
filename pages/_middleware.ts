@@ -1,6 +1,4 @@
-// eslint-disable-next-line @next/next/no-server-import-in-page
 import type { NextRequest, NextFetchEvent } from "next/server";
-// eslint-disable-next-line @next/next/no-server-import-in-page
 import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
