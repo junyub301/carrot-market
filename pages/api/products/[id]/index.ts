@@ -15,7 +15,7 @@ async function handler(
 
     if (req.method === "GET") {
         const product = await client.product.findUnique({
-            where: { id: +id.toString() },
+            where: { id: +id!.toString() },
             include: {
                 user: {
                     select: {
@@ -66,7 +66,7 @@ async function handler(
     } else if (req.method === "POST") {
         const product = await client.product.update({
             where: {
-                id: +id,
+                id: +id!.toString(),
             },
             data: {
                 soldOut: true,
@@ -77,7 +77,7 @@ async function handler(
             data: {
                 product: {
                     connect: {
-                        id: +id.toString(),
+                        id: +id!.toString(),
                     },
                 },
                 user: {
@@ -91,7 +91,7 @@ async function handler(
             data: {
                 product: {
                     connect: {
-                        id: +id.toString(),
+                        id: +id!.toString(),
                     },
                 },
                 user: {

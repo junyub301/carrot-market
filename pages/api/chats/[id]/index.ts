@@ -17,7 +17,7 @@ async function handler(
     if (method === "GET") {
         const messages = await client.message.findMany({
             where: {
-                chatroomId: +id.toString(),
+                chatroomId: +id!.toString(),
             },
             include: {
                 user: {
@@ -35,7 +35,7 @@ async function handler(
                 message: body.message,
                 chatroom: {
                     connect: {
-                        id: +id.toString(),
+                        id: +id!.toString(),
                     },
                 },
                 user: {
