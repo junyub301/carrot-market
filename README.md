@@ -33,9 +33,25 @@
 
 ## Error
 
-Next.js ODR(On-demand Revalidation)를 사용하기 위해 Next 버전을 12.1.0으로 올렸더니
-"Cannot set property 'reactRoot' of undefined" 에러 발생
+1. Next.js ODR(On-demand Revalidation)를 사용하기 위해 Next 버전을 12.1.0으로 올렸더니
+   "Cannot set property 'reactRoot' of undefined" 에러 발생
 
 -   해결방법
     아래와 같이 버전 변경
     {"next": "12.1.0","react": "^17.0.2","react-dom": "^17.0.2",}
+
+2. vercel 배포중 /pages/\_middleware.ts 파일에서 오류 발생
+
+-   해결 방법
+    Next.js 버전을 12.2이상으로 변경
+    middleware 파일을 root/middleware.js로 이동 및 파일명 수정
+
+3. 배포 후 Uncaught SyntaxError: Unexpected token '<' 에러
+
+-   해결 방법
+    middleware.js 파일에 아래 코드 추가
+    ```
+        export const config = {
+            matcher: "/",
+        };
+    ```

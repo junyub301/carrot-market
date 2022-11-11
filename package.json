@@ -7,7 +7,7 @@
         "start": "next start",
         "lint": "next lint",
         "studio": "npx prisma studio",
-        "connect": "pscale connect carrot-market dev",
+        "connect": "pscale connect carrot-market",
         "push": "npx prisma dp push"
     },
     "dependencies": {
