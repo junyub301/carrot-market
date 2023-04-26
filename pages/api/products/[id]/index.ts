@@ -4,10 +4,7 @@ import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import { withApiSession } from "@libs/server/withSession";
 
-async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<ResponseType>
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
     const {
         query: { id },
         session: { user },
@@ -38,9 +35,7 @@ async function handler(
                 },
             },
         });
-        const terms = product?.name
-            .split(" ")
-            .map((word) => ({ name: { contains: word } }));
+        const terms = product?.name.split(" ").map((word) => ({ name: { contains: word } }));
         const relatedProducts = await client.product.findMany({
             where: {
                 OR: terms,
@@ -72,21 +67,6 @@ async function handler(
                 soldOut: true,
             },
         });
-
-        await client.sale.create({
-            data: {
-                product: {
-                    connect: {
-                        id: +id!.toString(),
-                    },
-                },
-                user: {
-                    connect: {
-                        id: user?.id,
-                    },
-                },
-            },
-        });
         await client.purchase.create({
             data: {
                 product: {
@@ -106,6 +86,4 @@ async function handler(
     }
 }
 
-export default withApiSession(
-    withHandler({ methods: ["GET", "POST"], handler })
-);
+export default withApiSession(withHandler({ methods: ["GET", "POST"], handler }));

@@ -8,10 +8,7 @@ mail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
-async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<ResponseType>
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
     const { phone, email } = req.body;
     const user = phone ? { phone } : email ? { email } : null;
     if (!user) return res.status(400).json({ ok: false });
@@ -52,6 +49,7 @@ async function handler(
 
     return res.json({
         ok: true,
+        token: token.payload,
     });
 }
 
