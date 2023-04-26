@@ -3,10 +3,7 @@ import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import { withApiSession } from "@libs/server/withSession";
 
-async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<ResponseType>
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
     const {
         body: { productId, sellerId },
         session: { user },
@@ -16,6 +13,14 @@ async function handler(
     if (method === "GET") {
         const chatRooms = await client.chatroom.findMany({
             where: {
+                OR: [
+                    {
+                        sellerId: user?.id,
+                    },
+                    {
+                        buyerId: user?.id,
+                    },
+                ],
                 NOT: [
                     {
                         buyer: null,
@@ -27,6 +32,13 @@ async function handler(
             },
             include: {
                 buyer: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                    },
+                },
+                seller: {
                     select: {
                         id: true,
                         name: true,
@@ -80,6 +92,4 @@ async function handler(
     }
 }
 
-export default withApiSession(
-    withHandler({ methods: ["GET", "POST"], handler })
-);
+export default withApiSession(withHandler({ methods: ["GET", "POST"], handler }));

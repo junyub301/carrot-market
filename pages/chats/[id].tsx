@@ -7,6 +7,7 @@ import { cls } from "@libs/client/utils";
 import { useForm } from "react-hook-form";
 import useMutations from "@libs/client/useMutations";
 import messages from "pages/api/streams/[id]/messages";
+import Image from "next/image";
 
 interface ChatResponse {
     ok: boolean;
@@ -63,36 +64,45 @@ const ChatDetail: NextPage = () => {
     };
     return (
         <Layout canGoBack>
-            <div className='py-10 px-4 space-y-4'>
-                {data?.messages?.map((message) => (
-                    <div
-                        className={cls(
-                            "flex items-start space-x-2 ",
-                            message.user.id === user?.id
-                                ? "space-x-reverse flex-row-reverse"
-                                : ""
-                        )}
-                        key={message.id}
-                    >
-                        <div className='w-8 h-8 rounded-full bg-slate-400' />
-                        <div className='w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md'>
-                            <p>{message.message}</p>
+            <div className="py-10 px-4 space-y-4">
+                {data?.messages?.map((message) => {
+                    let avatar = user?.id === message.user.id ? user?.avatar : message.user.avatar;
+                    avatar = avatar ? avatar : "a95c472a-0aae-4100-9700-1258c8df5600";
+                    return (
+                        <div
+                            className={cls(
+                                "flex items-start space-x-2 ",
+                                message.user.id === user?.id
+                                    ? "space-x-reverse flex-row-reverse"
+                                    : ""
+                            )}
+                            key={message.id}
+                        >
+                            <div className="w-10 h-10 relative rounded-full">
+                                <Image
+                                    src={`https://imagedelivery.net/p0F9ZS4dCd2hN10Ig7VfWg/${avatar}/avatar`}
+                                    alt="userAvatar"
+                                    layout="fill"
+                                    className="rounded-full w-12 h-12"
+                                    objectFit="cover"
+                                />
+                            </div>
+                            <div className="w-1/2 text-sm text-gray-700 p-2 border border-gray-300 rounded-md">
+                                <p>{message.message}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
 
-                <div className='fixed w-full mx-auto max-w-md bottom-2 inset-x-0'>
-                    <form
-                        onSubmit={handleSubmit(onValid)}
-                        className='flex relative items-center'
-                    >
+                <div className="fixed w-full mx-auto max-w-md bottom-2 inset-x-0">
+                    <form onSubmit={handleSubmit(onValid)} className="flex relative items-center">
                         <input
-                            type='text'
+                            type="text"
                             {...register("message")}
-                            className='shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500 pr-12'
+                            className="shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500 pr-12"
                         />
-                        <div className='absolute inset-y-0 flex py-1.5 pr-1.5 right-0'>
-                            <button className='flex items-center bg-orange-500 rounded-full px-3 text-sm text-white hover:bg-orange-600  cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-orange-500'>
+                        <div className="absolute inset-y-0 flex py-1.5 pr-1.5 right-0">
+                            <button className="flex items-center bg-orange-500 rounded-full px-3 text-sm text-white hover:bg-orange-600  cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                                 &rarr;
                             </button>
                         </div>
