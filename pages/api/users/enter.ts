@@ -35,7 +35,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) 
             to: process.env.MY_PHONE!,
             body: `Your login token is ${payload}.`,
         });
-        console.log(message);
     } else if (email) {
         const email = await mail.send({
             from: process.env.MY_EMAIL!,
@@ -44,7 +43,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) 
             text: `Your token is ${payload}`,
             html: `<strong>Your token is ${payload}</strong>`,
         });
-        console.log(email);
     }
 
     return res.json({
