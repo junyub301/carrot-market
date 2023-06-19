@@ -40,44 +40,39 @@ const Buyer = () => {
     };
 
     return (
-        <Layout canGoBack title='구매자 선택'>
+        <Layout canGoBack title="구매자 선택">
             {data && (
-                <div className=' flex flex-col min-h-[50vh] gap-3 '>
-                    <div className='flex p-2 bg-gray-200  space-x-2 gap-3'>
-                        <div className='w-16 h-16 relative object-cover'>
+                <div className=" flex flex-col min-h-[50vh] gap-3 ">
+                    <div className="flex p-2 bg-gray-200  space-x-2 gap-3">
+                        <div className="w-16 h-16 relative object-cover">
                             <Image
-                                className='rounded-md object-cover '
+                                className="rounded-md object-cover "
                                 src={imageSrc(data?.product?.image, "public")}
-                                alt='productImage'
-                                layout='fill'
+                                alt="productImage"
+                                layout="fill"
                             />
                         </div>
-                        <div className='flex flex-col  space-y-2 gap-1'>
-                            <span className='text-gray-400'>거래한 물건</span>
+                        <div className="flex flex-col  space-y-2 gap-1">
+                            <span className="text-gray-400">거래한 물건</span>
                             <span>{data?.product?.name}</span>
                         </div>
                     </div>
-                    <div className='flex flex-col  divide-y-[1px]'>
+                    <div className="flex flex-col  divide-y-[1px]">
                         {data.product?.chatrooms?.map((chatroom) => (
                             <div
                                 key={chatroom.buyer?.id}
                                 onClick={() => onSelectUser(chatroom.buyer)}
                                 className={cls(
                                     "flex gap-3  cursor-pointer p-3",
-                                    selectUser === chatroom.buyer.id
-                                        ? "bg-slate-300"
-                                        : ""
+                                    selectUser === chatroom.buyer.id ? "bg-slate-300" : ""
                                 )}
                             >
-                                <div className='w-10 h-10 relative '>
+                                <div className="w-10 h-10 relative ">
                                     <Image
-                                        className='rounded-full  object-cover'
-                                        src={imageSrc(
-                                            chatroom.buyer?.avatar,
-                                            "avatar"
-                                        )}
-                                        alt='userAvatar'
-                                        layout='fill'
+                                        className="rounded-full  object-cover"
+                                        src={imageSrc(chatroom.buyer?.avatar, "avatar")}
+                                        alt="userAvatar"
+                                        layout="fill"
                                     />
                                 </div>
                                 <div>
@@ -86,11 +81,11 @@ const Buyer = () => {
                             </div>
                         ))}
                     </div>
-                    <div className='mt-auto'>
+                    <div className="mt-auto">
                         <Button
                             onClick={onSubmit}
-                            className='fixed bottom-0'
-                            text='확정하기'
+                            className="fixed bottom-0"
+                            text="확정하기"
                             disabled={!data.product?.chatrooms[0]?.buyer}
                         />
                     </div>
